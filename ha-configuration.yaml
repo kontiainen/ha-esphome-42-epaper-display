@@ -1,0 +1,22 @@
+# Notes!
+#
+# 1. You need to have Home Assistant integration for Finnish Meteorological Institute data taken into use
+# - https://github.com/anand-p-r/fmi-hass-custom
+# 
+# 2. Replace location "hakametsa" with your own.
+# 
+# Sensor defined will include four forecasts, with data items listed below 
+
+sensor:
+  - platform: template
+    sensors:
+      fmi_forecast:
+        friendly_name: FMI forecast
+        entity_id: sensor.fmi_forecast
+        value_template: >-
+          {%- for i in [ 0, 1, 2, 3] -%}
+            {{- state_attr('weather.hakametsa', 'forecast')[i].datetime.hour -}};
+            {{- state_attr('weather.hakametsa', 'forecast')[i].temperature -}};
+            {{- state_attr('weather.hakametsa', 'forecast')[i].condition -}};
+            {{- state_attr('weather.hakametsa', 'forecast')[i].precipitation -}};
+          {%- endfor %}
